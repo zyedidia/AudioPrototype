@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
 	// This will be used to record the call
 	MediaRecorder myRecorder = new MediaRecorder();
 	
+	
+	
 	// This will be used to play audio files that have been recorded
 	MediaPlayer myPlayer = new MediaPlayer();
 	
