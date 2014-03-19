@@ -272,6 +272,7 @@ public class MainActivity extends Activity {
  
 				CheckBox recordConversation = (CheckBox) findViewById(R.id.recordBox);
 				
+				
 				// If the conversation should be recorded
 				if (recordConversation.isChecked()) {
 					createNotification();
