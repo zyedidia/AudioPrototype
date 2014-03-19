@@ -10,12 +10,17 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -25,6 +30,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
 	// This will be used to record the call
@@ -172,6 +178,36 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	public void createNotification() {		
+		NotificationCompat.Builder builder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle("My notification")
+		        .setContentText("Hello World!");
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, MainActivity.class);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		builder.setContentIntent(resultPendingIntent);
+		NotificationManager notificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		notificationManager.notify(1, builder.build());
+	}
+	
 	// Called when the play audio file button is clicked
 	public void playFileButtonClicked(View v) throws IllegalArgumentException, SecurityException, 
 													 IllegalStateException, IOException { 
@@ -232,6 +268,8 @@ public class MainActivity extends Activity {
 			if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
 				// Active phone call
 				Log.i(LOG_TAG, "OFFHOOK");
+				
+				createNotification();
  
 				CheckBox recordConversation = (CheckBox) findViewById(R.id.recordBox);
 				
