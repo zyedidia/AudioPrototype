@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
 		
 		playAudioFile = (Button) findViewById(R.id.playFile);
 		playAudioFile.setText("Play Audio File");
-		
+				
 		// Listen to the phone state in the background (see phonelistener for more details)
 		PhoneCallListener phoneListener = new PhoneCallListener();
 		TelephonyManager telephonyManager = (TelephonyManager) this
@@ -118,6 +118,7 @@ public class MainActivity extends Activity {
 		myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 		// Encode using what is best for voice recognition
 		myRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		myRecorder.setAudioChannels(2);
 		
 		// Set the file that the audio will be written to
 		myRecorder.setOutputFile(outputFile);
@@ -128,8 +129,8 @@ public class MainActivity extends Activity {
 		try {
 			myRecorder.start();
 		} catch (Exception e) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Direct Voice Recording not Permitted", Toast.LENGTH_SHORT);
-			toast.show();
+			Toast.makeText(getApplicationContext(), 
+					"Direct Voice Recording is not Permitted on this Device", Toast.LENGTH_SHORT).show();
 			
 			myRecorder.reset();
 			
@@ -164,11 +165,6 @@ public class MainActivity extends Activity {
 			FileDescriptor fd = inputStream.getFD();
 			myPlayer.setDataSource(fd);
 			inputStream.close();
-			
-			//myPlayer.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + 
-					//"/" + file.getName());
-			
-			//myPlayer.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/audioRecord_18032014122224.3gp");
 						
 			myPlayer.prepare();
 			// Begin playing
@@ -184,7 +180,7 @@ public class MainActivity extends Activity {
 		if (playAudioFile.getText().toString() == "Play Audio File") {
 		
 			playAudioFile.setText("Stop Playing File");
-			
+						
 			// Get the folder that all the audio files are stored in
 			File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/audioRecords");
 			File[] listOfFiles = folder.listFiles();
@@ -260,6 +256,7 @@ public class MainActivity extends Activity {
 				// Need detect flag from CALL_STATE_OFFHOOK
 				Log.i(LOG_TAG, "IDLE");
  
+				// If the phone has gone from in call to Idle
 				if (isPhoneCalling) {
   
 					try {
