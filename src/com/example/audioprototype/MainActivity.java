@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-@SuppressLint("NewApi")
 public class MainActivity extends Activity {
 
 	// This will be used to record the call
@@ -93,7 +92,8 @@ public class MainActivity extends Activity {
 	public void startRecording(int value) throws IllegalStateException, IOException {
 		
 		// Make sure the audioRecords directory exists
-		File audioDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/audioRecords");
+		File audioDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + 
+				"/audioRecords");
 		
 		if (!audioDir.exists()) {
 			audioDir.mkdir();
@@ -182,8 +182,8 @@ public class MainActivity extends Activity {
 		NotificationCompat.Builder builder =
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle("My notification")
-		        .setContentText("Hello World!");
+		        .setContentTitle("Audio Prototype")
+		        .setContentText("Recording...");
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -218,7 +218,8 @@ public class MainActivity extends Activity {
 			playAudioFile.setText("Stop Playing File");
 						
 			// Get the folder that all the audio files are stored in
-			File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/audioRecords");
+			File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + 
+					"/audioRecords");
 			File[] listOfFiles = folder.listFiles();
 			ArrayList<File> playableFiles = new ArrayList<File>();
 			
@@ -268,14 +269,12 @@ public class MainActivity extends Activity {
 			if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
 				// Active phone call
 				Log.i(LOG_TAG, "OFFHOOK");
-				
-				createNotification();
  
 				CheckBox recordConversation = (CheckBox) findViewById(R.id.recordBox);
 				
 				// If the conversation should be recorded
 				if (recordConversation.isChecked()) {
-				
+					createNotification();
 					try {
 						// Start Recording
 						startRecording(MediaRecorder.AudioSource.VOICE_CALL);
